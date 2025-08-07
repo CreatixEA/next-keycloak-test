@@ -1,11 +1,32 @@
 name: keycloak
 
 services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data/keycloak/postgres:/var/lib/postgresql/data
+
   keycloak:
     image: keycloak/keycloak
-    command: start-dev
+    command: start
+    depends_on:
+      - db
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: 127.0.0.1
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_HTTPS_CERTIFICATE_FILE: /opt/ssl/tls.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/ssl/tls.key
     ports:
       - 8080:8080
+      - 8443:8443
+    volumes:
+      - ./data/keycloak/ssl:/opt/ssl

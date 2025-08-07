@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 // The client you created from the Server-Side Auth instructions
 import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   // if "next" is in param, use it as the redirect URL
   let next = searchParams.get("next") ?? "/";
+
+  const cookieStore = await cookies();
+
+  console.log("COOKIES", cookieStore.getAll())
 
   console.log("CALLBACK", code, next);
   if (!next.startsWith("/")) {
@@ -15,7 +20,7 @@ export async function GET(request: Request) {
   }
 
   if (code) {
-    const supabase = await createClient();
+    const supabase = await createClient();console.log("COOKIES", cookieStore.getAll())
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     console.log("CALLBACK 2", error, code);
     if (!error) {

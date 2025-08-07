@@ -56,15 +56,6 @@ export function KeycloakButton() {
             provider: "keycloak",
             options: { scopes: "openid profile" },
           })
-          .then(({ data, error }) => {
-            if (data) {
-              console.log("Logged in", data);
-              router.refresh();
-            }
-            if (error) {
-              console.log("Error login", error.message);
-            }
-          })
       }
     >
       Login with Keycloak
