@@ -51,11 +51,13 @@ export function KeycloakButton() {
       className="border-2 border-black p-2"
       type="button"
       onClick={() =>
-        supabase.auth
-          .signInWithOAuth({
-            provider: "keycloak",
-            options: { scopes: "openid profile" },
-          })
+        supabase.auth.signInWithOAuth({
+          provider: "keycloak",
+          options: {
+            scopes: "openid profile",
+            redirectTo: "http://127.0.0.1:3000/auth/callback",
+          },
+        })
       }
     >
       Login with Keycloak
